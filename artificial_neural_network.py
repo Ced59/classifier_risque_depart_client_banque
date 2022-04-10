@@ -95,3 +95,7 @@ classifier.compile(
 
 
 
+# Entrainement du réseau de neurones
+classifier.fit(x_train, y_train, batch_size=10, epochs=100)
+
+
