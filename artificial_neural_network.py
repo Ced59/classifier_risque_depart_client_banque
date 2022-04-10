@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 
 tf.__version__
 
-
 # Partie 1 : Préparation des données
 
 # Importer le dataset
@@ -32,11 +31,11 @@ x[:, 2] = labelencoder_X_gender.fit_transform(x[:, 2])
 labelencoder_X_Country = LabelEncoder()
 x[:, 1] = labelencoder_X_Country.fit_transform(x[:, 1])
 
-
 # Transformation en variable ordinales du pays
 # (les 3 premières colonnes seront 0 ou 1 pour représenter les 3 pays possibles)
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
+
 ct = ColumnTransformer(transformers=[('encoder', OneHotEncoder(), [1])], remainder='passthrough')
 x = np.array(ct.fit_transform(x))
 
@@ -45,17 +44,15 @@ x = x[:, 1:]
 
 # Séparer en un jeu d'entrainement et un jeu de test
 from sklearn.model_selection import train_test_split
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
 
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
 
 # Normalisation des variables (tout mettre en valeur entre -2 et 2)
 from sklearn.preprocessing import StandardScaler
+
 sc = StandardScaler()
 x_train = sc.fit_transform(x_train)
 x_test = sc.fit_transform(x_test)
-
-
-
 
 # Partie 2 : Contruction du réseau de neurones
 
@@ -88,3 +85,13 @@ classifier.add(
           activation="sigmoid",
           kernel_initializer="uniform")
 )
+
+# Compilation du réseau de neurones
+classifier.compile(
+    optimizer="adam",  # algorithme gradient stochastique
+    loss="binary_crossentropy",  # fonction de coût
+    metrics=["accuracy"]
+)
+
+
+
