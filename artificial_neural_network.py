@@ -106,3 +106,16 @@ classifier.fit(x_train, y_train, batch_size=10, epochs=100)
 
 # Partie 4 : Effectuer les prédictions
 y_pred = classifier.predict(x_test)
+
+# transformer les probabilités en 0 ou 1 avec seuil à 50% pour créer matrice de confusion
+y_pred = (y_pred > 0.5)
+
+# Matrice de confusion (pour comparer les prédictions avec les données que l'on a)
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+
+predictionsleft = cm[0, 0]
+predictionsstay = cm[1, 1]
+nbpredictions = len(y_test)
+goodpredictions = (predictionsstay + predictionsleft) / nbpredictions * 100
+print(goodpredictions, "% de bonnes prédictions")
