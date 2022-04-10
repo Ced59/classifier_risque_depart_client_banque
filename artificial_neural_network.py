@@ -95,7 +95,14 @@ classifier.compile(
 
 
 
-# Entrainement du réseau de neurones
+
+
+# Partie 3 : Entrainement du réseau de neurones
 classifier.fit(x_train, y_train, batch_size=10, epochs=100)
 
 
+
+
+
+# Partie 4 : Effectuer les prédictions
+y_pred = classifier.predict(x_test)
