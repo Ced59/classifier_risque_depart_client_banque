@@ -93,16 +93,8 @@ classifier.compile(
     metrics=["accuracy"]
 )
 
-
-
-
-
 # Partie 3 : Entrainement du réseau de neurones
 classifier.fit(x_train, y_train, batch_size=10, epochs=100)
-
-
-
-
 
 # Partie 4 : Effectuer les prédictions
 y_pred = classifier.predict(x_test)
@@ -112,6 +104,7 @@ y_pred = (y_pred > 0.5)
 
 # Matrice de confusion (pour comparer les prédictions avec les données que l'on a)
 from sklearn.metrics import confusion_matrix
+
 cm = confusion_matrix(y_test, y_pred)
 
 predictionsleft = cm[0, 0]
@@ -119,3 +112,44 @@ predictionsstay = cm[1, 1]
 nbpredictions = len(y_test)
 goodpredictions = (predictionsstay + predictionsleft) / nbpredictions * 100
 print(goodpredictions, "% de bonnes prédictions")
+
+new_prediction = classifier.predict(sc.transform(np.array([[0, 0, 600, 0, 40, 3, 60000, 2, 1, 1, 50000]])))
+new_prediction = (new_prediction > 0.5)
+
+
+# Utilisation du k-fold cross validation pour le problème de variance
+from keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.model_selection import cross_val_score
+
+
+def build_classifier():
+    classifier = Sequential()
+    classifier.add(
+        Dense(units=6,
+              activation="relu",
+              kernel_initializer="uniform",
+              input_dim=11)
+    )
+    classifier.add(
+        Dense(units=6,
+              activation="relu",
+              kernel_initializer="uniform")
+    )
+    classifier.add(
+        Dense(units=1,
+              activation="sigmoid",
+              kernel_initializer="uniform")
+    )
+    classifier.compile(
+        optimizer="adam",  # algorithme gradient stochastique
+        loss="binary_crossentropy",  # fonction de coût
+        metrics=["accuracy"]
+    )
+    return classifier
+
+
+classifier = KerasClassifier(build_fn=build_classifier, batch_size=10, epochs=100)
+precisions = cross_val_score(classifier, x_train, y_train, cv=10, n_jobs=-1)
+
+average = precisions.mean()
+ecart_type = precisions.std()
