@@ -67,7 +67,7 @@ from keras.layers import Dense
 # Initialisation
 classifier = Sequential()
 
-# Ajout couche d'entrée et couche cachée
+# Ajout couche d'entrée et couche cachée avec fonction redresseur
 classifier.add(
     Dense(units=6,
           activation="relu",
@@ -75,12 +75,16 @@ classifier.add(
           input_dim=11)
 )
 
-# Ajout deuxième couche cachée
+# Ajout deuxième couche cachée avec fonction redresseur
 classifier.add(
     Dense(units=6,
           activation="relu",
           kernel_initializer="uniform")
 )
 
-# Ajout couche de sortie
-
+# Ajout couche de sortie avec fonction sigmoïde
+classifier.add(
+    Dense(units=1,
+          activation="sigmoid",
+          kernel_initializer="uniform")
+)
